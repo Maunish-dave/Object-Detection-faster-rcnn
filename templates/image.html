@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Object Detection</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'image.css' %}" />
+    <script>
+      var loadFile = function (event) {
+        var output = document.getElementById("output");
+        output.src = URL.createObjectURL(event.target.files[0]);
+        output.onload = function () {
+          URL.revokeObjectURL(output.src); // free memory
+        };
+      };
+    </script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="heading">
+        <h1>
+          Object Detection
+        </h1>
+      </div>
+      <div class="info">
+        <p>Detect Bounding box and class around objects in the image</p>
+      </div>
+      <div class="image">
+        <img
+          class="display"
+          id="output"
+          alt="Image Preview"
+          height="350px"
+          width="350px"
+          src="{{ src }}"
+        />
+      </div>
+      <div class="image_form">
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="inputs">
+            <div class="input-button">
+              <input
+                type="file"
+                name="image"
+                accept="image/*"
+                id="id_image"
+                {%
+                if
+                form.image.value!="None"
+                %}
+                value="{{ form.image.value|stringformat:'s'}}"
+                {%
+                endif
+                %}
+                required
+                onchange="loadFile(event)"
+              />
+              <br />
+              <input
+                class="submit"
+                name="submit"
+                value="Detect"
+                type="submit"
+              />
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
